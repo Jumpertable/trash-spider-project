@@ -114,7 +114,7 @@ void loop() {
     while(dutyCycle<255){
     dutyCycle++;
     ledcWrite(ledChannel, dutyCycle);
-    delay(10);
+    delay(1);
     }
   }
 
@@ -122,7 +122,7 @@ void loop() {
     while(dutyCycle>0){   // fade down
     dutyCycle--;
     ledcWrite(ledChannel, dutyCycle);
-    delay(10);
+    delay(1);
     }
   }
 }
