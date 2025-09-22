@@ -127,40 +127,36 @@
 //   }
 // }
 
-#define PWM 2
-int dutyCycle = 127;  // start at 50%
+#define PWM_PIN 2         
+#define SW1 26             
+#define SW2 27             
 
-const int PWM_freq = 1000;      // 1000 Hz
-const int PWM_resolution = 8;   // 8-bit (0–255)
+const int PWM_freq = 1000;      // 1kHz
+const int PWM_resolution = 8;   // 8-bit resolution (0-255)
 const int ledChannel = 0;       // PWM channel
 
-#define SW1 26  
-#define SW2 27 
-
 void setup() {
-  pinMode(PWM, OUTPUT);
   pinMode(SW1, INPUT);
   pinMode(SW2, INPUT);
 
   ledcSetup(ledChannel, PWM_freq, PWM_resolution);
-  ledcAttachPin(PWM, ledChannel);
-
-  ledcWrite(ledChannel, dutyCycle);
+  ledcAttachPin(PWM_PIN, ledChannel);
 }
 
-void loop() { 
-  if (digitalRead(SW1) == HIGH) {
-    dutyCycle -= 10;
-    if (dutyCycle < 0) dutyCycle = 0;
-    ledcWrite(ledChannel, dutyCycle);
-    delay(200);  
-  }
+void loop() {
+  while (1) {
+    bool s1 = (digitalRead(SW1) == HIGH);  
+    bool s2 = (digitalRead(SW2) == HIGH);
 
- 
-  if (digitalRead(SW2) == HIGH) {
-    dutyCycle += 10;
-    if (dutyCycle > 255) dutyCycle = 255;
-    ledcWrite(ledChannel, dutyCycle);
-    delay(200);  
+    int duty;
+    if (s1 && !s2) {
+      duty = (9 * 255) / 100;
+    } else if (s2 && !s1) {
+      duty = (91 * 255) / 100;
+    } else {
+      duty = (50 * 255) / 100;
+    }
+
+    ledcWrite(ledChannel, duty);
   }
 }
